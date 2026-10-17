@@ -125,6 +125,9 @@ addPart(g,dark,[0.16,0.07,0.48],0.18,1.06,0.36); // held rifle
 addPart(g,dark,[0.07,0.13,0.18],0.18,0.98,0.44); // grip
 addPart(g,metal,[0.055,0.055,0.44],0.18,1.09,0.75); // barrel
 addPart(g,metal,[0.08,0.04,0.1],0.18,1.13,0.43); // sights
+// Raycast hitboxes must be on meshes, not only the limb groups.
+[lu,ll,ru,rl,lh,rh].forEach(mesh=>mesh.userData.part='arm');
+[lt,ls,lb,rt,rs,rb].forEach(mesh=>mesh.userData.part='leg');
 g.userData={leftArm:la,rightArm:ra,leftLeg:llg,rightLeg:rlg,head,torso,walkPhase:0};
 return g;
 }
