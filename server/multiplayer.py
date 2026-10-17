@@ -64,6 +64,7 @@ class Peer:
 class Room:
     def __init__(self, name):
         self.name = name
+        self.map = "city"
         self.lock = threading.RLock()
         self.players = {}
         self.phase = "waiting"
@@ -73,10 +74,12 @@ class Room:
         self.score_ct = 0
         self.last_snapshot = 0
 
-    def joined(self, peer, name):
+    def joined(self, peer, name, map_choice="city"):
         with self.lock:
             if len(self.players) >= MAX_PLAYERS:
                 return False
+            if not self.players:
+                self.map = map_choice if map_choice in ("city", "desert") else "city"
             counts = {team: sum(p.team == team for p in self.players.values()) for team in ("T", "CT")}
             peer.team = "T" if counts["T"] <= counts["CT"] else "CT"
             peer.name = re.sub(r"[^\w -]", "", str(name), flags=re.UNICODE).strip()[:16] or "Player"
@@ -155,7 +158,7 @@ class Room:
         with self.lock:
             remaining = max(0, self.deadline - time.monotonic()) if self.deadline else 0
             payload = {
-                "type": "snapshot", "room": self.name, "phase": self.phase,
+                "type": "snapshot", "room": self.name, "map": self.map, "phase": self.phase,
                 "remaining": round(remaining, 1), "round": self.round,
                 "scoreT": self.score_t, "scoreCT": self.score_ct,
                 "players": [
@@ -314,7 +317,7 @@ def websocket(handler):
             if not joined:
                 if msg.get("type") != "join":
                     continue
-                joined = room.joined(peer, msg.get("name", "Player"))
+                joined = room.joined(peer, msg.get("name", "Player"), msg.get("map", "city"))
                 if not joined:
                     peer.send({"type": "error", "message": "Комната заполнена (максимум 10 игроков)"})
                     break
