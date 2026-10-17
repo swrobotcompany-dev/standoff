@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Standoff Web 3D</title>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<div id="menu">
+<h1>STANDOFF WEB</h1>
+<h2>5 vs 5 • 8 раундов до победы</h2>
+<input id="username" placeholder="Введите ваш ник" maxlength="16" value="Player">
+<div class="section-title">🗺️ ВЫБОР КАРТЫ</div>
+<div class="maps">
+<div class="map selected" data-map="city" style="background:linear-gradient(135deg,#4a5568,#2d3748)">
+<div class="mname">🏙️ CITY</div>
+<div class="mdesc">Городская карта</div>
+<div class="mdesc">Ящики и стены</div>
+</div>
+<div class="map" data-map="desert" style="background:linear-gradient(135deg,#d4a574,#8b6f47)">
+<div class="mname">🏜️ DESERT</div>
+<div class="mdesc">Пустынная карта</div>
+<div class="mdesc">Дюны и камни</div>
+</div>
+</div>
+<div class="section-title">🎨 СКИН ОРУЖИЯ</div>
+<div class="skins">
+<div class="skin selected" data-skin="0" style="background:linear-gradient(135deg,#444,#222)">Стандарт</div>
+<div class="skin" data-skin="1" style="background:linear-gradient(135deg,#ff6b35,#8b0000)">Огонь</div>
+<div class="skin" data-skin="2" style="background:linear-gradient(135deg,#4a9eff,#001a4d)">Лёд</div>
+<div class="skin" data-skin="3" style="background:linear-gradient(135deg,#a855f7,#3b0764)">Галактика</div>
+<div class="skin" data-skin="4" style="background:linear-gradient(135deg,#fbbf24,#78350f)">Золото</div>
+</div>
+<div class="section-title">🔫 НАЧАЛЬНОЕ ОРУЖИЕ</div>
+<div class="weapons" id="weaponSelect"></div>
+<button onclick="startGame()">НАЧАТЬ ИГРУ</button>
+<div style="margin-top:20px;color:#666;font-size:13px;max-width:600px;text-align:center;line-height:1.6">
+WASD — движение • <b>Пробел</b> — прыжок • Мышь — прицел • <b>ЛКМ зажать</b> — стрельба<br>
+<b>E</b> — прицел AWM • <b>Q</b> — переключение наблюдения (после смерти) • R — перезарядка • 1/2/3/4 — смена оружия • Shift — бег • B — магазин
+</div>
+</div>
+<div id="hud">
+<div id="crosshair"></div>
+<div id="scopeOverlay"></div>
+<div id="scopeCross"></div>
+<div id="hitmarker"></div>
+<div id="health">100 HP</div>
+<div id="ammo">12 / 48</div>
+<div id="weaponName">P350</div>
+<div id="scoreboard">
+<div class="team-column team-t"><div class="team-header">🔴 ТЕРРОРИСТЫ — <span id="scoreT">0</span></div><div id="teamT"></div></div>
+<div class="team-column team-ct"><div class="team-header">🔵 СПЕЦНАЗ — <span id="scoreCT">0</span></div><div id="teamCT"></div></div>
+</div>
+<div id="timer" class="preparing">20</div>
+<div id="roundInfo">Раунд <span id="roundNum">1</span></div>
+<div id="phaseInfo" style="color:#fbbf24">⏳ ПОДГОТОВКА</div>
+<div id="killfeed"></div>
+<div id="centerMsg"></div>
+<div id="damageOverlay"></div>
+<div id="buyHint">Нажмите B для покупки оружия</div>
+<div id="scopeHint">[E] — прицел AWM</div>
+<div id="spectateInfo">
+<div>НАБЛЮДЕНИЕ ЗА: <span class="spec-name" id="specName">—</span></div>
+<div class="spec-hint">[Q] — следующий союзник</div>
+</div>
+<div id="prepareOverlay"><div class="text">⏳ ПОДГОТОВКА К РАУНДУ</div></div>
+</div>
+<div id="buyMenu" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:50;align-items:center;justify-content:center">
+<div style="background:#1a1a2e;padding:30px;border-radius:12px;border:2px solid #ff6b35;min-width:500px">
+<h2 style="color:#ff6b35;margin-bottom:20px;text-align:center">КУПИТЬ ОРУЖИЕ</h2>
+<div class="weapons" id="buyWeapons"></div>
+<div style="text-align:center;margin-top:20px;color:#aaa">Нажмите B или ESC чтобы закрыть</div>
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<!-- Скрипты используют общую глобальную область видимости; порядок подключения важен. -->
+<script src="src/core/state.js"></script>
+<script src="src/ui/menus.js"></script>
+<script src="src/world/scene.js"></script>
+<script src="src/entities/actors.js"></script>
+<script src="src/weapons/weapons.js"></script>
+<script src="src/entities/spectator.js"></script>
+<script src="src/input/controls.js"></script>
+<script src="src/game/rounds.js"></script>
+<script src="src/ui/hud.js"></script>
+<script src="src/entities/movement.js"></script>
+<script src="src/game/main.js"></script>
+</body>
+</html>
