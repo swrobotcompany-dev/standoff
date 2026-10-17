@@ -105,13 +105,14 @@ class MultiplayerTest(unittest.TestCase):
         first = connect_ws(self.port, name)
         second = connect_ws(self.port, name)
         try:
-            send_json(first, {"type": "join", "name": "Alice"})
+            send_json(first, {"type": "join", "name": "Alice", "map": "desert"})
             a = until(first, lambda v: v.get("type") == "welcome")
-            send_json(second, {"type": "join", "name": "Bob"})
+            send_json(second, {"type": "join", "name": "Bob", "map": "city"})
             b = until(second, lambda v: v.get("type") == "welcome")
             self.assertNotEqual(a["id"], b["id"])
             starting = until(first, lambda v: v.get("type") == "snapshot" and len(v["players"]) == 2)
             self.assertEqual({p["team"] for p in starting["players"]}, {"T", "CT"})
+            self.assertEqual(starting["map"], "desert")
             active = until(first, lambda v: v.get("type") == "snapshot" and v["phase"] == "active")
             self.assertEqual(active["round"], 1)
             send_json(first, {"type": "fire", "weapon": "m870",
