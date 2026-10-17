@@ -26,10 +26,7 @@ document.getElementById('crosshair').style.display='none';
 }
 const a=getAvailableWeapons();
 const wk=a.map(([k])=>k);
-if(e.code==='Digit1'&&wk[0])switchWeapon(wk[0]);
-if(e.code==='Digit2'&&wk[1])switchWeapon(wk[1]);
-if(e.code==='Digit3'&&wk[2])switchWeapon(wk[2]);
-if(e.code==='Digit4'&&wk[3])switchWeapon(wk[3]);
+if(/^Digit[1-7]$/.test(e.code)&&wk[Number(e.code.slice(5))-1])switchWeapon(wk[Number(e.code.slice(5))-1]);
 });
 addEventListener('keyup',e=>{
 keys[e.code]=false;
