@@ -34,6 +34,7 @@ renderer.setSize(innerWidth,innerHeight);
 }
 
 function buildMap(){
+scene.children.filter(o=>o.userData&&o.userData.worldStatic).forEach(o=>scene.remove(o));
 walls=[];
 if(selectedMap==='city')buildCityMap();
 else buildDesertMap();
@@ -43,10 +44,12 @@ function buildCityMap(){
 const floor=new THREE.Mesh(new THREE.PlaneGeometry(300,300),new THREE.MeshStandardMaterial({color:0x5a6b4a}));
 floor.rotation.x=-Math.PI/2;
 floor.receiveShadow=true;
+floor.userData.worldStatic=true;
 scene.add(floor);
 const road=new THREE.Mesh(new THREE.PlaneGeometry(20,200),new THREE.MeshStandardMaterial({color:0x3a3a3a}));
 road.rotation.x=-Math.PI/2;
 road.position.y=0.01;
+road.userData.worldStatic=true;
 scene.add(road);
 const wm=new THREE.MeshStandardMaterial({color:0x8a8a8a});
 addWall([0,5,-100],[200,10,3],wm);
@@ -94,6 +97,7 @@ const mesh=new THREE.Mesh(new THREE.BoxGeometry(...size),mat);
 mesh.position.set(pos[0],pos[1],pos[2]);
 mesh.castShadow=true;
 mesh.receiveShadow=true;
+mesh.userData.worldStatic=true;
 scene.add(mesh);
 walls.push({
 mesh,
