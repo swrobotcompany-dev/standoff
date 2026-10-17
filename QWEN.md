@@ -1,24 +1,24 @@
-# Standoff — Qwen Code instructions
+# Инструкции для Qwen — standoff
 
-## Project
-- A browser-based 3D FPS prototype, currently implemented in a single HTML file: `станок 0.5.html`.
-- It uses Three.js from a CDN. There is no package manager, build script, or test suite in this repository.
-- Make minimal, task-focused changes. Do not overwrite the full game or introduce a build system unless requested.
+## Проект
+- Репозиторий: `swrobotcompany-dev/standoff`. Основная ветка: `main`.
+- Игра Standoff Web 3D пока состоит из файла `станок 0.5.html`; библиотека Three.js загружается с CDN.
+- Вноси только запрошенные изменения. Не переписывай проект целиком без просьбы пользователя.
 
-## Required GitHub workflow for every coding task
-1. Read the current `main` branch and check the working tree before editing.
-2. Create a **new branch from up-to-date `main`**, named `qwen/<short-description>`. Never commit task changes straight into `main`.
-3. Make and validate changes. For HTML/JavaScript changes, at least inspect the script for syntax errors and manually test in a browser when available. Do not claim a browser test ran if it did not.
-4. Commit with a descriptive message, using a real configured Git author identity (never the example `Ваше Имя <you@example.com>`).
-5. Push the feature branch to the correct repository: `swrobotcompany-dev/standoff`.
-6. **Create a pull request to `main`** (for example, `gh pr create --repo swrobotcompany-dev/standoff --base main --head <branch> --title "..." --body "..."`).
-7. Verify that a PR exists, and include its clickable URL in your final answer. Do not report success merely because a local commit or push succeeded.
+## Как отправлять изменения
+1. Используй **уже подключённый GitHub** в интерфейсе Qwen, если он доступен; не требуй от пользователя дополнительных ключей для обычной задачи.
+2. Получи актуальную `main` и создай **новую ветку** `qwen/<описание-задачи>` от её текущего состояния. Не работай прямо в `main`.
+3. Измени код, проверь синтаксис JavaScript; если можешь, проверь игру в браузере. Не утверждай, что тестировал то, что не запускал.
+4. Отправь изменения в новую ветку доступным GitHub-инструментом и **создай PR из неё в main**.
+5. Обязательно проверь наличие PR и дай пользователю ссылку `https://github.com/swrobotcompany-dev/standoff/pull/<номер>`. Коммит или push без PR — не завершение задачи.
 
-## When a pull request cannot be created
-- Show the *exact* error to the user instead of silently skipping the PR.
-- Check `git remote -v`, `git status`, `git branch --show-current`, `git config user.name`, `git config user.email`, `gh auth status`, and `gh repo view swrobotcompany-dev/standoff`.
-- Check whether the agent's GitHub token/app is allowed to write **Contents** and **Pull requests** for this repository. Permission to read a public repository is not sufficient.
-- If `gh` is unavailable or not authenticated, explain that credentials must be configured in the agent's execution environment; do not ask to paste tokens into code or commits.
-- Do not force-push `main`, merge your own PR, or delete existing branches without explicit authorization.
+## ОЧЕНЬ ВАЖНО: не запрашивай секреты
+- **Никогда не проси пользователя прислать или вставить в чат GitHub personal access token (PAT), API token, GITHUB_TOKEN, GH_TOKEN, SSH private key, пароль, cookie или другие секреты.**
+- **Не предлагай создавать новые токены и не требуй ручной настройки `gh auth` или CLI**, если пользователь работает через Qwen Chat с уже подключённым GitHub. Наличие или отсутствие локальной команды `gh` не доказывает, что интеграция GitHub в Qwen Chat сломана.
+- Не утверждай, что проблема именно в токене, если GitHub не вернул такую ошибку.
+- Если GitHub действительно отклоняет операцию, покажи **точный код и текст ошибки** и на каком шаге это произошло.
+- Если Qwen потерял доступ к своему встроенному GitHub-подключению, скажи кратко: «Не могу создать PR через текущее подключение Qwen. Проверь подключение GitHub в настройках Qwen и доступ приложения к репозиторию». **Не проси токен.**
+- Если есть ошибка `No commits between ...`, сначала убедись, что ветка создана от `main` и содержит реальные изменения. Если PR конфликтует, сообщи о конфликтующих файлах, не выдавай это за ошибку авторизации.
+- Не обещай, что PR отправлен, пока GitHub не подтвердил его URL; не меняй существующие PR и `main` насильно.
 
-These instructions guide Qwen Code only: a `QWEN.md` file does **not** install a GitHub integration, authorize an agent, or automatically open pull requests.
+Этот файл задаёт предпочтительное поведение агента; он не выдаёт ему доступ и не меняет настройки сторонней интеграции.
