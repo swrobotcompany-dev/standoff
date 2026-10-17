@@ -118,6 +118,8 @@ player.alive=mine.alive;
 playerStats[mine.name]={kills:mine.kills,deaths:mine.deaths,team:mine.team};
 if(firstSnapshot||changedRound||(!wasAlive&&mine.alive)){
 player.pos.set(...mine.pos);
+yaw=mine.yaw;
+pitch=0;
 player.vel.set(0,0,0);
 player.onGround=true;
 camera.position.copy(player.pos);
@@ -138,6 +140,8 @@ if(changedRound||previousPhase!==newPhase){
 if(newPhase==='preparing'){
 if(mine){
 player.pos.set(...mine.pos);
+yaw=mine.yaw;
+pitch=0;
 player.vel.set(0,0,0);
 camera.position.copy(player.pos);
 player.onGround=true;
