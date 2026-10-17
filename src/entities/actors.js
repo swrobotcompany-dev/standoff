@@ -46,6 +46,7 @@ g.add(torso);
 const vest=new THREE.Mesh(new THREE.BoxGeometry(0.68,0.55,0.38),vm);
 vest.position.y=1.0;
 vest.castShadow=true;
+vest.userData={part:'torso'};
 g.add(vest);
 for(let i=-1;i<=1;i+=2){
 const p=new THREE.Mesh(new THREE.BoxGeometry(0.15,0.12,0.05),bdm);
@@ -98,6 +99,32 @@ rb.position.set(0,-1.05,0.05);rlg.add(rb);
 rlg.position.set(0.17,0.55,0);
 rlg.userData={part:'leg'};
 g.add(rlg);
+// Tactical silhouette: face protection, segmented armor and equipment.
+const dark=new THREE.MeshStandardMaterial({color:team==='CT'?0x101d30:0x2b241e,metalness:0.38,roughness:0.57});
+const metal=new THREE.MeshStandardMaterial({color:0x374151,metalness:0.7,roughness:0.37});
+const lens=new THREE.MeshStandardMaterial({color:0x101820,metalness:0.18,roughness:0.25});
+function addPart(parent,material,size,x,y,z){
+const obj=new THREE.Mesh(new THREE.BoxGeometry(...size),material);
+obj.position.set(x,y,z);obj.castShadow=true;parent.add(obj);return obj;
+}
+addPart(g,lens,[0.35,0.11,0.105],0,1.60,0.194); // goggles
+addPart(g,dark,[0.28,0.14,0.07],0,1.47,0.206); // half face mask
+for(const side of [-1,1]){
+addPart(g,dark,[0.095,0.18,0.12],side*0.23,1.62,0.0); // helmet ears
+addPart(g,metal,[0.11,0.25,0.31],side*0.305,1.05,0.01); // shoulder plating
+addPart(g,vm,[0.18,0.21,0.10],side*0.25,0.83,0.23); // vest pouches
+addPart(g,dark,[0.17,0.18,0.14],side*0.16,0.52,0.22); // thigh holsters
+addPart(side<0?llg:rlg,dark,[0.20,0.17,0.13],0,-0.67,0.11); // knee guards
+addPart(side<0?la:ra,dark,[0.18,0.11,0.18],0,-0.79,0); // gloves
+addPart(side<0?la:ra,metal,[0.19,0.16,0.14],0,-0.43,0.01); // elbow guards
+}
+addPart(g,dark,[0.57,0.1,0.4],0,0.72,0); // belt
+addPart(g,metal,[0.12,0.09,0.04],0,0.72,0.23); // buckle
+addPart(g,vm,[0.50,0.58,0.18],0,1.04,-0.26); // backpack
+addPart(g,dark,[0.16,0.07,0.48],0.18,1.06,0.36); // held rifle
+addPart(g,dark,[0.07,0.13,0.18],0.18,0.98,0.44); // grip
+addPart(g,metal,[0.055,0.055,0.44],0.18,1.09,0.75); // barrel
+addPart(g,metal,[0.08,0.04,0.1],0.18,1.13,0.43); // sights
 g.userData={leftArm:la,rightArm:ra,leftLeg:llg,rightLeg:rlg,head,torso,walkPhase:0};
 return g;
 }
@@ -144,7 +171,7 @@ scene.add(body);
 let bw;
 if(roundNum===1)bw=Math.random()<0.5?'p350':'deagle';
 else{
-const r=['ak47','awm'],p=['p350','deagle'];
+const r=['ak47','awm','mp7','m870','spas12'],p=['p350','deagle'];
 bw=Math.random()<0.7?r[Math.floor(Math.random()*r.length)]:p[Math.floor(Math.random()*p.length)];
 }
 return{team,name,body,pos:pos.clone(),vel:new THREE.Vector3(0,0,0),hp:CONFIG.maxHP,alive:true,weapon:bw,lastShot:0,target:null,moveDir:new THREE.Vector3(),nextDecision:0,spawnPos:pos.clone(),onGround:true};
