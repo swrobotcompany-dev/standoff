@@ -47,6 +47,7 @@ username=document.getElementById('username').value.trim()||'Player';
 document.getElementById('menu').style.display='none';
 const roomInput=document.getElementById('roomCode');
 netRoom=(roomInput&&roomInput.value.trim()||'public').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,24)||'public';
+if(!multiplayer)setNetStatus('Тренировка • локальные боты');
 document.getElementById('hud').style.display='block';
 roundNum=1;
 scoreT=0;
