@@ -66,6 +66,7 @@ sight.position.set(0,0.07,-0.1);gun.add(sight);
 gun.position.set(0.25,-0.2,-0.4);
 }
 
+decorateWeapon(gun,currentWeapon,mm,sm,dm,gm);
 camera.add(gun);
 scene.add(camera);
 weapon.mesh=gun;
@@ -103,47 +104,63 @@ function shoot(){
 if(roundPhase!=='active'||!player.alive)return;
 const now=performance.now();
 const w=WEAPONS[currentWeapon];
-if(weapon.reloading)return;
-if(now-weapon.lastShot<w.fireRate)return;
+if(weapon.reloading||now-weapon.lastShot<w.fireRate)return;
 if(weapon.ammo<=0){reload();return;}
 weapon.lastShot=now;
 weapon.ammo--;
 updateHUD();
-if(weapon.mesh){
-weapon.mesh.position.z+=w.recoil;
-const bz=currentWeapon==='awm'?-0.6:currentWeapon==='ak47'?-0.5:-0.4;
-setTimeout(()=>{if(weapon.mesh)weapon.mesh.position.z=bz;},60);
+const gun=weapon.mesh;
+if(gun){
+gun.position.z+=w.recoil;
+const baseZ=currentWeapon==='awm'?-0.6:(currentWeapon==='ak47'||currentWeapon==='mp7')?-0.5:(w.category==='shotgun'?-0.65:-0.4);
+setTimeout(()=>{if(weapon.mesh===gun)gun.position.z=baseZ;},85);
 }
-const ray=new THREE.Raycaster();
-ray.setFromCamera(new THREE.Vector2(0,0),camera);
-ray.far=250;
 const targets=[];
+if(multiplayer){
+remotePlayers.forEach(b=>{
+if(!b.alive||b.team===player.team)return;
+b.body.traverse(o=>{if(o.isMesh&&o.userData.part)targets.push({bot:b,mesh:o,part:o.userData.part});});
+});
+}else{
 bots.forEach(b=>{
 if(!b.alive||b.team===player.team)return;
-b.body.traverse(o=>{
-if(o.isMesh&&o.userData.part)targets.push({bot:b,mesh:o,part:o.userData.part});
+b.body.traverse(o=>{if(o.isMesh&&o.userData.part)targets.push({bot:b,mesh:o,part:o.userData.part});});
 });
-});
+}
 const meshes=targets.map(t=>t.mesh);
+const wallMeshes=walls.map(wall=>wall.mesh);
+const shotClaims=new Map();
+const pelletCount=w.pellets||1;
+for(let i=0;i<pelletCount;i++){
+const spread=w.spread||0;
+const offset=new THREE.Vector2((Math.random()-0.5)*spread,(Math.random()-0.5)*spread);
+const ray=new THREE.Raycaster();
+ray.setFromCamera(offset,camera);
+ray.far=250;
 const hits=ray.intersectObjects(meshes,false);
-const wm=walls.map(w=>w.mesh);
-const wh=ray.intersectObjects(wm,false);
-const wd=wh.length?wh[0].distance:Infinity;
-if(hits.length&&hits[0].distance<wd){
-const f=hits[0];
-const t=targets.find(x=>x.mesh===f.object);
-if(t){
-let d=w.damage;
-let hs=false;
-if(t.part==='head'){d*=HEADSHOT_MULT;hs=true;}
-else if(t.part==='arm'||t.part==='leg')d*=LIMB_MULT;
-damageBot(t.bot,d,player.name,hs);
-spawnImpact(f.point,0xff0000);
-showHitmarker(hs);
+const wallHits=ray.intersectObjects(wallMeshes,false);
+const wallDistance=wallHits.length?wallHits[0].distance:Infinity;
+if(hits.length&&hits[0].distance<wallDistance){
+const hit=hits[0];
+const target=targets.find(item=>item.mesh===hit.object);
+if(!target)continue;
+const headshot=target.part==='head';
+const multiplier=headshot?HEADSHOT_MULT:(target.part==='arm'||target.part==='leg')?LIMB_MULT:1;
+if(multiplayer){
+const key=target.bot.id+':'+target.part;
+const prev=shotClaims.get(key)||{id:target.bot.id,part:target.part,pellets:0};
+prev.pellets++;
+shotClaims.set(key,prev);
+}else{
+damageBot(target.bot,w.damage*multiplier,player.name,headshot);
 }
-}else if(wh.length){
-spawnImpact(wh[0].point,0xffff00);
+spawnImpact(hit.point,0xff423d);
+showHitmarker(headshot);
+}else if(wallHits.length&&i<3){
+spawnImpact(wallHits[0].point,0xffcf70);
 }
+}
+if(multiplayer)netSend({type:'fire',weapon:currentWeapon,hits:Array.from(shotClaims.values())});
 spawnMuzzleFlash();
 }
 
