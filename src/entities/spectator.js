@@ -30,7 +30,7 @@ spectateTarget=targets[spectateIndex];
 
 // Камера на позиции глаз союзника
 const eyePos=spectateTarget.pos.clone();
-eyePos.y+=CONFIG.playerHeight-0.1;
+eyePos.y+=multiplayer?-0.1:CONFIG.playerHeight-0.1;
 camera.position.copy(eyePos);
 
 // Поворот как у союзника
