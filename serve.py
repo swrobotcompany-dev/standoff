@@ -7,7 +7,7 @@ import sys
 from server.multiplayer import websocket
 
 ROOT = Path(__file__).resolve().parent
-PORT = int(sys.argv[1]) if len(sys.argv) > 1 else 8000
+PORT = 8000
 
 
 class Handler(SimpleHTTPRequestHandler):
@@ -21,11 +21,12 @@ class Handler(SimpleHTTPRequestHandler):
 
 
 if __name__ == "__main__":
+    port = int(sys.argv[1]) if len(sys.argv) > 1 else PORT
     handler = partial(Handler, directory=str(ROOT))
-    with ThreadingHTTPServer(("0.0.0.0", PORT), handler) as httpd:
+    with ThreadingHTTPServer(("0.0.0.0", port), handler) as httpd:
         httpd.daemon_threads = True
-        print(f"Standoff LAN: http://0.0.0.0:{PORT}/", flush=True)
-        print("Откройте http://<IP-компьютера>:%s/ на обоих компьютерах" % PORT, flush=True)
+        print(f"Standoff LAN: http://0.0.0.0:{port}/", flush=True)
+        print("Откройте http://<IP-компьютера>:%s/ на обоих компьютерах" % port, flush=True)
         try:
             httpd.serve_forever()
         except KeyboardInterrupt:
