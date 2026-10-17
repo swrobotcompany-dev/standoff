@@ -1,5 +1,6 @@
 // Завершение и запуск раундов.
 function checkRoundEnd(){
+if(multiplayer)return;
 const ta=(player.team==='T'&&player.alive?1:0)+bots.filter(b=>b.team==='T'&&b.alive).length;
 const ca=(player.team==='CT'&&player.alive?1:0)+bots.filter(b=>b.team==='CT'&&b.alive).length;
 if(ta===0||ca===0){
