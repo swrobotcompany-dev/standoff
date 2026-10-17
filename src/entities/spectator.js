@@ -2,7 +2,7 @@
 // ================== SPECTATOR MODE ==================
 function getSpectateTargets(){
 // Все живые союзники (включая ботов той же команды)
-return bots.filter(b=>b.team===player.team&&b.alive);
+return multiplayer?Array.from(remotePlayers.values()).filter(b=>b.team===player.team&&b.alive):bots.filter(b=>b.team===player.team&&b.alive);
 }
 
 function updateSpectator(){
