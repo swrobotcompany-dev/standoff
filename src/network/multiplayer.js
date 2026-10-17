@@ -157,9 +157,10 @@ updateScoreboard();
 updateTimerUI();
 }
 function updateNetwork(dt){
-if(!multiplayer||!netPlayerId||roundPhase!=='active')return;
+if(!multiplayer||!netPlayerId)return;
 const now=performance.now();
-if(now-netLastSent<50)return;
+// Heartbeat during lobby/prep/death so the host does not drop idle players.
+if(now-netLastSent<(roundPhase==='active'?50:2000))return;
 netLastSent=now;
 netSend({type:'state',pos:[player.pos.x,player.pos.y,player.pos.z],yaw,weapon:currentWeapon});
 }
