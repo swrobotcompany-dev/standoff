@@ -1,6 +1,6 @@
 // Меню выбора оружия и покупки.
 function getAvailableWeapons(){
-return Object.entries(WEAPONS).filter(([k,w])=>roundNum===1?w.category==='pistol':true);
+return Object.entries(WEAPONS).filter(([k,w])=>multiplayer||roundNum!==1||w.category==='pistol');
 }
 
 function buildWeaponSelect(){
