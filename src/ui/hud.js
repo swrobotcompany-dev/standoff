@@ -4,9 +4,13 @@ const t=document.getElementById('timer');
 const p=document.getElementById('phaseInfo');
 const bh=document.getElementById('buyHint');
 const po=document.getElementById('prepareOverlay');
-if(roundPhase==='preparing'){
+if(roundPhase==='waiting'){
+t.className='preparing';t.textContent='ОЖИДАНИЕ';
+p.textContent='Ожидаем второго игрока в комнате '+netRoom;
+p.style.color='#fbbf24';bh.style.display='none';po.style.display='none';
+}else if(roundPhase==='preparing'){
 t.className='preparing';
-t.textContent=Math.ceil(prepareTimer);
+t.textContent=Math.ceil(multiplayer?netTimer:prepareTimer);
 p.textContent='⏳ ПОДГОТОВКА (B — магазин)';
 p.style.color='#fbbf24';
 bh.style.display='block';
@@ -34,9 +38,10 @@ const cd=document.getElementById('teamCT');
 td.innerHTML='';
 cd.innerHTML='';
 const all=[{name:player.name,team:player.team,alive:player.alive,isSelf:true}];
-bots.forEach(b=>all.push({name:b.name,team:b.team,alive:b.alive,isSelf:false}));
+if(multiplayer){remotePlayers.forEach(b=>all.push({name:b.name,team:b.team,alive:b.alive,isSelf:false,id:b.id}));}
+else{bots.forEach(b=>all.push({name:b.name,team:b.team,alive:b.alive,isSelf:false}));}
 all.forEach(p=>{
-const s=playerStats[p.name]||{kills:0,deaths:0};
+const s=multiplayer&&!p.isSelf?{kills:remotePlayers.get(p.id)?.kills||0,deaths:remotePlayers.get(p.id)?.deaths||0}:(playerStats[p.name]||{kills:0,deaths:0});
 const r=document.createElement('div');
 let cls='player-row';
 if(p.isSelf)cls+=' self';
