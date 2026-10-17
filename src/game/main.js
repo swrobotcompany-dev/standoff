@@ -39,15 +39,10 @@ selectedMap=el.dataset.map;
 
 buildWeaponSelect();
 
-function startSoloGame(){
-multiplayer=false;
-startGame();
-}
+function startSoloGame(){startGame(false);}
 
-function startGame(){
-// The primary button joins the shared LAN match.
-if(document.activeElement&&document.activeElement.id==='soloButton')multiplayer=false;
-else multiplayer=true;
+function startGame(online=true){
+multiplayer=online;
 username=document.getElementById('username').value.trim()||'Player';
 document.getElementById('menu').style.display='none';
 const roomInput=document.getElementById('roomCode');
