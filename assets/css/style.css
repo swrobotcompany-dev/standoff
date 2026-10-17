@@ -65,3 +65,21 @@ canvas{display:block}
 #spectateInfo .spec-hint{color:#aaa;font-size:12px;margin-top:5px}
 #prepareOverlay{position:absolute;inset:0;background:rgba(0,0,0,0.15);display:none;pointer-events:none;align-items:center;justify-content:center}
 #prepareOverlay .text{font-size:32px;color:#fbbf24;text-shadow:0 0 20px #000;font-weight:bold}
+
+/* Shared-match menu and in-game network indicator. */
+.room-select{display:flex;flex-direction:column;gap:7px;align-items:center;max-width:440px;text-align:center;margin:-5px 0 8px}
+.room-select label{color:#fbbf24;font-size:13px;letter-spacing:1px;text-transform:uppercase}
+.room-select input{width:235px!important;margin:0!important;padding:10px!important;font-size:16px!important}
+.room-select small{color:#9ca3af;font-size:12px;line-height:1.4}
+.menu-actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:8px}
+#menu button.secondary{background:#293e56;font-size:16px}
+#menu button.secondary:hover{background:#385474}
+#networkStatus{position:absolute;top:15px;left:20px;padding:8px 14px;border-radius:7px;background:rgba(0,0,0,0.66);color:#99dfb7;font-size:13px;max-width:240px}
+@media(max-width:740px){
+#menu h1{font-size:34px}
+#menu h2{font-size:16px;margin-bottom:12px}
+#scoreboard{min-width:0;width:96%;top:52px;padding:7px;gap:5px;font-size:11px}
+.team-header{font-size:11px}
+#timer{top:170px;font-size:23px}
+#networkStatus{top:8px;font-size:11px}
+}
