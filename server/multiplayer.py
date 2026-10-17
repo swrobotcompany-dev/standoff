@@ -94,6 +94,10 @@ class Room:
             if len(self.players) < 2:
                 self.phase = "waiting"
                 self.deadline = 0
+            if not self.players:
+                self.round = 1
+                self.score_t = 0
+                self.score_ct = 0
             elif self.phase == "active":
                 self.check_round_end_locked()
         self.broadcast_snapshot()
