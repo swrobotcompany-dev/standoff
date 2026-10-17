@@ -2,7 +2,10 @@
 function animate(){
 requestAnimationFrame(animate);
 const dt=clock.getDelta();
-if(roundPhase==='preparing'){
+if(multiplayer){
+netTimer=Math.max(0,netTimer-dt);
+updateTimerUI();
+}else if(roundPhase==='preparing'){
 prepareTimer-=dt;
 if(prepareTimer<=0){
 roundPhase='active';
@@ -14,7 +17,7 @@ if(mouse.down&&mouse.locked&&roundPhase==='active'&&player.alive&&!buyMenuOpen){
 if(WEAPONS[currentWeapon].automatic)shoot();
 }
 updatePlayer(dt);
-updateBots(dt);
+if(multiplayer){updateNetwork(dt);updateRemotePlayers(dt);}else{updateBots(dt);}
 renderer.render(scene,camera);
 }
 
@@ -36,9 +39,19 @@ selectedMap=el.dataset.map;
 
 buildWeaponSelect();
 
+function startSoloGame(){
+multiplayer=false;
+startGame();
+}
+
 function startGame(){
+// The primary button joins the shared LAN match.
+if(document.activeElement&&document.activeElement.id==='soloButton')multiplayer=false;
+else multiplayer=true;
 username=document.getElementById('username').value.trim()||'Player';
 document.getElementById('menu').style.display='none';
+const roomInput=document.getElementById('roomCode');
+netRoom=(roomInput&&roomInput.value.trim()||'public').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,24)||'public';
 document.getElementById('hud').style.display='block';
 roundNum=1;
 scoreT=0;
@@ -50,7 +63,14 @@ spectateTarget=null;
 initScene();
 setupControls();
 updateHUD();
-startRound();
+if(multiplayer){
+roundPhase='waiting';
+weapon.ammo=WEAPONS[currentWeapon].magSize;
+weapon.reserve=WEAPONS[currentWeapon].reserve;
+connectMultiplayer();
+updateScoreboard();
+updateTimerUI();
+}else{startRound();}
 animate();
 showCenterMsg('Кликните для захвата мыши',3000);
 }
