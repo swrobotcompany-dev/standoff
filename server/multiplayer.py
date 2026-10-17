@@ -19,7 +19,7 @@ WEAPONS = {
     "mp7": (19, 75, 1), "m870": (13, 850, 9),
     "spas12": (10, 450, 8),
 }
-SPAWN = {"T": [-60, 1.7, 0], "CT": [60, 1.7, 0]}
+SPAWN = {"T": [-24, 1.7, 0], "CT": [24, 1.7, 0]}
 PREPARE_SECONDS = 7
 ROUND_END_SECONDS = 4
 MAX_PLAYERS = 10
@@ -84,6 +84,7 @@ class Room:
             peer.team = "T" if counts["T"] <= counts["CT"] else "CT"
             peer.name = re.sub(r"[^\w -]", "", str(name), flags=re.UNICODE).strip()[:16] or "Player"
             peer.pos = SPAWN[peer.team][:]
+            peer.yaw = -1.5707963 if peer.team == "T" else 1.5707963
             self.players[peer.id] = peer
             if self.phase == "waiting" and len(self.players) >= 2:
                 self.start_round_locked()
@@ -112,6 +113,7 @@ class Room:
             p.hp = 100
             p.alive = True
             p.pos = SPAWN[p.team][:]
+            p.yaw = -1.5707963 if p.team == "T" else 1.5707963
             p.last_fire = 0.0
 
     def check_round_end_locked(self):
