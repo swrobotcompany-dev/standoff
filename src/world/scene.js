@@ -23,7 +23,7 @@ sun.shadow.camera.top=120;sun.shadow.camera.bottom=-120;
 scene.add(sun);
 buildMap();
 createPlayer();
-spawnBots();
+if(!multiplayer)spawnBots();
 createWeaponView();
 clock=new THREE.Clock();
 addEventListener('resize',()=>{
