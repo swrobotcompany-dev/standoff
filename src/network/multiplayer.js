@@ -13,7 +13,7 @@ setNetStatus('Подключение к комнате '+netRoom+'…');
 netSocket=new WebSocket(url);
 netSocket.addEventListener('open',()=>{
 setNetStatus('Подключено • '+netRoom);
-netSend({type:'join',name:username});
+netSend({type:'join',name:username,map:selectedMap});
 });
 netSocket.addEventListener('message',event=>{
 let data;
@@ -63,6 +63,10 @@ pos:new THREE.Vector3(...data.pos),targetPos:new THREE.Vector3(...data.pos),
 moveDir:new THREE.Vector3(),kills:data.kills,deaths:data.deaths,weapon:data.weapon};
 }
 function applyNetworkSnapshot(data){
+if((data.map==='city'||data.map==='desert')&&data.map!==selectedMap){
+selectedMap=data.map;
+buildMap();
+}
 const mine=data.players.find(p=>p.id===netPlayerId);
 const changedRound=data.round!==netPrevRound;
 const firstSnapshot=netPrevRound===0;
