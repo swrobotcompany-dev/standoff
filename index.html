@@ -2,6 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Standoff Web 3D</title>
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
@@ -10,6 +11,7 @@
 <h1>STANDOFF WEB</h1>
 <h2>5 vs 5 • 8 раундов до победы</h2>
 <input id="username" placeholder="Введите ваш ник" maxlength="16" value="Player">
+<div class="room-select"><label for="roomCode">Комната для игры с другом</label><input id="roomCode" maxlength="24" value="public" spellcheck="false"><small>Оба игрока открывают один IP:8000 и указывают одинаковую комнату.</small></div>
 <div class="section-title">🗺️ ВЫБОР КАРТЫ</div>
 <div class="maps">
 <div class="map selected" data-map="city" style="background:linear-gradient(135deg,#4a5568,#2d3748)">
@@ -33,13 +35,14 @@
 </div>
 <div class="section-title">🔫 НАЧАЛЬНОЕ ОРУЖИЕ</div>
 <div class="weapons" id="weaponSelect"></div>
-<button onclick="startGame()">НАЧАТЬ ИГРУ</button>
+<div class="menu-actions"><button onclick="startGame()">🌐 ИГРАТЬ ПО СЕТИ</button><button id="soloButton" class="secondary" onclick="startSoloGame()">🤖 ТРЕНИРОВКА С БОТАМИ</button></div>
 <div style="margin-top:20px;color:#666;font-size:13px;max-width:600px;text-align:center;line-height:1.6">
 WASD — движение • <b>Пробел</b> — прыжок • Мышь — прицел • <b>ЛКМ зажать</b> — стрельба<br>
-<b>E</b> — прицел AWM • <b>Q</b> — переключение наблюдения (после смерти) • R — перезарядка • 1/2/3/4 — смена оружия • Shift — бег • B — магазин
+<b>E</b> — прицел AWM • <b>Q</b> — переключение наблюдения (после смерти) • R — перезарядка • 1–7 — смена оружия • Shift — бег • B — магазин
 </div>
 </div>
 <div id="hud">
+<div id="networkStatus" role="status" aria-live="polite"></div>
 <div id="crosshair"></div>
 <div id="scopeOverlay"></div>
 <div id="scopeCross"></div>
@@ -78,12 +81,14 @@ WASD — движение • <b>Пробел</b> — прыжок • Мышь 
 <script src="src/ui/menus.js"></script>
 <script src="src/world/scene.js"></script>
 <script src="src/entities/actors.js"></script>
+<script src="src/weapons/models.js"></script>
 <script src="src/weapons/weapons.js"></script>
 <script src="src/entities/spectator.js"></script>
 <script src="src/input/controls.js"></script>
 <script src="src/game/rounds.js"></script>
 <script src="src/ui/hud.js"></script>
 <script src="src/entities/movement.js"></script>
+<script src="src/network/multiplayer.js"></script>
 <script src="src/game/main.js"></script>
 </body>
 </html>
