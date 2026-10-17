@@ -65,6 +65,7 @@ moveDir:new THREE.Vector3(),kills:data.kills,deaths:data.deaths,weapon:data.weap
 function applyNetworkSnapshot(data){
 const mine=data.players.find(p=>p.id===netPlayerId);
 const changedRound=data.round!==netPrevRound;
+const firstSnapshot=netPrevRound===0;
 const previousPhase=netPrevPhase;
 const newPhase=data.phase;
 netPrevPhase=newPhase;netPrevRound=data.round;
@@ -111,6 +112,12 @@ player.team=mine.team;
 player.hp=mine.hp;
 player.alive=mine.alive;
 playerStats[mine.name]={kills:mine.kills,deaths:mine.deaths,team:mine.team};
+if(firstSnapshot||changedRound||(!wasAlive&&mine.alive)){
+player.pos.set(...mine.pos);
+player.vel.set(0,0,0);
+player.onGround=true;
+camera.position.copy(player.pos);
+}
 if(mine.hp<previousHP){
 const overlay=document.getElementById('damageOverlay');
 overlay.style.opacity=1;
