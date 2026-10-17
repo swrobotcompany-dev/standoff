@@ -111,7 +111,6 @@ player.team=mine.team;
 player.hp=mine.hp;
 player.alive=mine.alive;
 playerStats[mine.name]={kills:mine.kills,deaths:mine.deaths,team:mine.team};
-if(changedRound||(!wasAlive&&mine.alive)||!netPlayerId)return;
 if(mine.hp<previousHP){
 const overlay=document.getElementById('damageOverlay');
 overlay.style.opacity=1;
