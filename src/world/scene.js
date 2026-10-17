@@ -34,6 +34,9 @@ renderer.setSize(innerWidth,innerHeight);
 }
 
 function buildMap(){
+const sky=selectedMap==='city'?0x87ceeb:0xe8c170;
+scene.background=new THREE.Color(sky);
+scene.fog=new THREE.Fog(sky,80,300);
 scene.children.filter(o=>o.userData&&o.userData.worldStatic).forEach(o=>scene.remove(o));
 walls=[];
 if(selectedMap==='city')buildCityMap();
