@@ -100,7 +100,7 @@ return;
 }
 
 // Во время подготовки — НЕ двигаемся (только стоим)
-if(roundPhase==='preparing'){
+if(roundPhase!=='active'){
 camera.position.copy(player.pos);
 camera.rotation.order='YXZ';
 camera.rotation.y=yaw;
